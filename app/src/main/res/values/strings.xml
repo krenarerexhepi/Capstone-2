@@ -1,0 +1,28 @@
+<resources>
+    <string name="action_settings">Settings</string>
+    <string name="app_name">FreshDrinks</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment log in </string>
+    <string name="hello_blank_fragment_register">Hello register</string>
+    <string name="title_activity_list">ListActivity</string>
+    <string name="action_register">Register</string>
+    <string name="action_sign_in">Log In</string>
+    <string name="action_sign_in_short">SignIn</string>
+    <string name="prompt_password">Short password</string>
+    <string name="prompt_username">Short username</string>
+    <string name="prompt_email">email</string>
+    <string name="title_activity_drinks">DrinksActivity</string>
+    <string name="drink_name">drink name</string>
+    <string name="recipe">recipe</string>
+    <string name="upload_image">Upload image</string>
+    <string name="upload_video">upload video</string>
+    <string name="title_activity_details">DetailsActivity</string>
+    <string name="details">Your drinks</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_add_drink">AddDrinkActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+</resources>

@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView img;
     private GridView gridView;
     private GridViewAdapter gridAdapter;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        username = getIntent().getDataString();
 
         img= (ImageView)findViewById(R.id.imgMain);
 
@@ -44,11 +46,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+     //  LoadGridData();
+
+    }
+
+    private void LoadGridData() {
         LoadImages();
         gridView = (GridView) findViewById(R.id.gridView);
         gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, getData());
         gridView.setAdapter(gridAdapter);
-
     }
 
     DrinksDbHelper mDbHelper;
@@ -136,5 +142,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return imageItems;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+LoadGridData();
+        // Get the Camera instance as the activity achieves full user focus
+
     }
 }

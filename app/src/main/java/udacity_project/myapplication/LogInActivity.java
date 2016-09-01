@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -18,6 +19,9 @@ public class LogInActivity extends AppCompatActivity {
 
     UserDbHelper mDbHelper;
     EditText username;
+    EditText password;
+    String EXTRA_MESSAGE="EXTRA_MESSAGE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +33,7 @@ public class LogInActivity extends AppCompatActivity {
         final Button btnRegister=(Button)findViewById(R.id.register);
 
         username = (EditText) findViewById(R.id.username);
+        password = (EditText) findViewById(R.id.password);
 
         mDbHelper = new UserDbHelper(getBaseContext());
         btnLogIn.setOnClickListener(new View.OnClickListener() {
@@ -37,20 +42,32 @@ public class LogInActivity extends AppCompatActivity {
 
                 SQLiteDatabase db = mDbHelper.getReadableDatabase();
                 String name = String.valueOf(username.getText());
-                Cursor data = db.rawQuery("select * from tblUser where username=?",
-                        new String[] { name });
+                String pass = String.valueOf(password.getText());
+
+                Cursor data = db.rawQuery("select * from tblUser where username=? and password=?",
+                        new String[] { name,pass});
 
                 data.moveToFirst();
+                boolean isUsername=false;
                 while (data.getCount() > 0) {
+                    isUsername=true;
                     String id = data.getString(data.getColumnIndex("username"));
                     if(id.equals(name)) {
                         startActivity(intent);
+                         intent.putExtra(EXTRA_MESSAGE, name);
                         break;
                     }
                     else{data.moveToNext();
 
                     }
                 }
+                if(isUsername==false)
+                {
+                    Snackbar.make(v,"This username do not exist!", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+
+                }
+
 
             }
         });

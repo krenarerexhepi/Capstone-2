@@ -25,7 +25,7 @@ public class DrinksContract {
             public static final String COLUMN_DRINK_RECIPE = "recipe";
             public static final String COLUMN_IS_DETOX = "isdetox";
             public static final String COLUMN_IMAGE = "drinkimg";
-            //public static final String COLUMN_NAME_USERNAME_DRINK = "username";
+            public static final String COLUMN_NAME_USERNAME_DRINK = "username";
 
         }
      }

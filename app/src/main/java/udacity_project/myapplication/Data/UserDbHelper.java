@@ -29,15 +29,29 @@ public class UserDbHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + DrinksContract.DrinksEntry.TABLE_NAME;
 
+    private static final String SQL_CREATE_ENTRIES_DRINK =
+            "CREATE TABLE " + DrinksContract.DrinksEntry.TABLE_NAME_DRINK + " (" +
+                    DrinksContract.DrinksEntry._ID_DRINK + " INTEGER PRIMARY KEY  autoincrement," +
+                    DrinksContract.DrinksEntry.COLUMN_DRINK_NAME + TEXT_TYPE + COMMA_SEP +
+                    DrinksContract.DrinksEntry.COLUMN_DRINK_RECIPE + TEXT_TYPE + COMMA_SEP +
+                    DrinksContract.DrinksEntry.COLUMN_IS_DETOX + TEXT_TYPE + COMMA_SEP +
+                    DrinksContract.DrinksEntry.COLUMN_IMAGE + " BLOB" + COMMA_SEP +
+                    DrinksContract.DrinksEntry.COLUMN_NAME_USERNAME_DRINK + TEXT_TYPE +
+                    " )";
+
+    private static final String SQL_DELETE_ENTRIES_DRINK =
+            "DROP TABLE IF EXISTS " + DrinksContract.DrinksEntry.TABLE_NAME_DRINK;
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES);
+        db.execSQL(SQL_CREATE_ENTRIES_DRINK);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
         db.execSQL(SQL_DELETE_ENTRIES);
+        db.execSQL(SQL_DELETE_ENTRIES_DRINK);
         onCreate(db);
     }
 

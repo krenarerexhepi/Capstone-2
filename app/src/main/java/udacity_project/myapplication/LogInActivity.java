@@ -53,8 +53,8 @@ public class LogInActivity extends AppCompatActivity {
                     isUsername=true;
                     String id = data.getString(data.getColumnIndex("username"));
                     if(id.equals(name)) {
-                        startActivity(intent);
                          intent.putExtra(EXTRA_MESSAGE, name);
+                         startActivity(intent);
                         break;
                     }
                     else{data.moveToNext();
@@ -63,7 +63,7 @@ public class LogInActivity extends AppCompatActivity {
                 }
                 if(isUsername==false)
                 {
-                    Snackbar.make(v,"This username do not exist!", Snackbar.LENGTH_LONG)
+                    Snackbar.make(v,"The username or password do not match !", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
 
                 }

@@ -9,11 +9,13 @@ import android.graphics.Bitmap;
 public class ImageItem {
     private Bitmap image;
     private String title;
+    private Boolean isFavorite;
 
-    public ImageItem(Bitmap image, String title) {
+    public ImageItem(Bitmap image, String title,Boolean isFavorite) {
         super();
         this.image = image;
         this.title = title;
+        this.setFavorite(isFavorite);
     }
 
     public Bitmap getImage() {
@@ -30,5 +32,14 @@ public class ImageItem {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+
+    public Boolean getFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        isFavorite = favorite;
     }
 }

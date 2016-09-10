@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -25,7 +24,7 @@ import android.widget.ImageView;
 
 import udacity_project.myapplication.Data.BitmapUtility;
 import udacity_project.myapplication.Data.DrinksContract;
-import udacity_project.myapplication.Data.DrinksDbHelper;
+import udacity_project.myapplication.Data.UserDbHelper;
 
 public class AddDrinkActivity extends AppCompatActivity {
 
@@ -33,7 +32,7 @@ public class AddDrinkActivity extends AppCompatActivity {
     EditText drinkRecipe;
     CheckBox detox;
     ImageView img;
-
+    String user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +42,7 @@ public class AddDrinkActivity extends AppCompatActivity {
 
         Button button = (Button) findViewById(R.id.uploadImage);
         Button btnSave = (Button) findViewById(R.id.btnSaveDrinks);
-
+        user = getIntent().getStringExtra("EXTRA_MESSAGE");
         drinkName =(EditText)findViewById(R.id.drinksName);
         drinkRecipe = (EditText)findViewById(R.id.recipe);
         detox = (CheckBox)findViewById(R.id.isdetox);
@@ -67,56 +66,39 @@ public class AddDrinkActivity extends AppCompatActivity {
             }
         });
     }
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    private Bitmap mImageBitmap;
-    private String mCurrentPhotoPath;
-    private ImageView mImageView;
-    DrinksDbHelper mDbHelper = new DrinksDbHelper(getBaseContext());
 
+    UserDbHelper mDbHelper = new UserDbHelper(getBaseContext());
 
     public void saveDrinkData(View view)
     {
-         mDbHelper = new DrinksDbHelper(getBaseContext());
+        mDbHelper = new UserDbHelper(getBaseContext());
         // Gets the data repository in write mode
-
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-       // mDbHelper.onCreate(db);
-        String detoxValue="";
 
-        ContentValues values = new ContentValues();
+        String detoxValue="";
         if(detox.isChecked())
         {
             detoxValue="true";
-
         }
         else
         {
             detoxValue="false";
-
         }
-
+        ContentValues values = new ContentValues();
         values.put(DrinksContract.DrinksEntry.COLUMN_DRINK_NAME, drinkName.getText().toString());
         values.put(DrinksContract.DrinksEntry.COLUMN_DRINK_RECIPE, drinkRecipe.getText().toString());
         values.put(DrinksContract.DrinksEntry.COLUMN_IS_DETOX, detoxValue);
         values.put(DrinksContract.DrinksEntry.COLUMN_IMAGE, bitmapdata);
+        values.put(DrinksContract.DrinksEntry.COLUMN_NAME_USERNAME_DRINK, user);
         try {
             db.insert(
                     DrinksContract.DrinksEntry.TABLE_NAME_DRINK,
                     DrinksContract.DrinksEntry._ID_DRINK,
                     values);
 
-           // SQLiteDatabase db2 = mDbHelper.getReadableDatabase();
-
+            db.close();
             Snackbar.make(view, "Data saved ", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-          //  String name = String.valueOf("ooo");
-          //  Cursor data = db.rawQuery("select * from tblDrink ",null);
-
-         //   data.moveToFirst();
-            //while (data.getCount() > 0) {
-           //     String id = data.getString(data.getColumnIndex("drinkname"));
-
-           // }
         }
         catch (Exception ex)
         {
@@ -138,33 +120,21 @@ public class AddDrinkActivity extends AppCompatActivity {
             @Override
 
             public void onClick(DialogInterface dialog, int item) {
-
                 if (options[item].equals("Choose from Gallery"))
-
                 {
-
-                    Intent intent=new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                   Intent intent=new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, 2);
-
                 }
-
                 else if (options[item].equals("Cancel")) {
-
                     dialog.dismiss();
-
                 }
-
             }
 
         });
-
         builder.show();
-
     }
 
-   Bitmap bitmapDrawable;
     byte[] bitmapdata;
-
     public void onActivityResult(int requestcode,int resultcode,Intent intent)
     {
         super.onActivityResult(requestcode, resultcode, intent);
@@ -175,6 +145,7 @@ public class AddDrinkActivity extends AppCompatActivity {
                 Uri selectedImage = intent.getData();
                 String[] filePath = { MediaStore.Images.Media.DATA };
                 Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
+                assert c != null;
                 c.moveToFirst();
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 String picturePath = c.getString(columnIndex);
@@ -187,39 +158,10 @@ public class AddDrinkActivity extends AppCompatActivity {
                 Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
                 bitmapdata= BitmapUtility.getBytes(bitmap);
 
-              /*  ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                bitmapdata = stream.toByteArray();*/
-
-              //  bitmapDrawable=drawableToBitmap(drawable);
-
             }
         }
     }
-    public static Bitmap drawableToBitmap (Drawable drawable) {
-        Bitmap bitmap = null;
-
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if(bitmapDrawable.getBitmap() != null) {
-                return bitmapDrawable.getBitmap();
-            }
-        }
-
-        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
-    }
-
-    public void onBackPressed() {
+     public void onBackPressed() {
         super.onBackPressed();
-        //overridePendingTransition(R.anim.slide_down,0);
     }
 }

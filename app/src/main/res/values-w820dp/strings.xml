@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chose_gallery">Choose from Gallery</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_photo">Add Photo!</string>
+    <string name="error_data">Error data</string>
+    <string name="action">Action</string>
+    <string name="data_saved">"Data saved "</string>
+    <string name="username_or_pass">The username or password do not match !</string>
+    <string name="username">username</string>
+    <string name="drinkname">drinkname</string>
+    <string name="drinkimg">drinkimg</string>
+    <string name="isdetox">isdetox</string>
+    <string name="no_image">No image to display!</string>
+    <string name="select_for_username">select * from tblDrink where username=?</string>
+    <string name="action_detox">Sort detox</string>
+    <string name="action_favorite">Sort favorite</string>
+    <string name="action_share">Share</string>
+    <string name="no_detox_drinks">Do not have detox drinks to display!!</string>
+    <string name="action_load_all">Load all</string>
+    <string name="is_detox">Is detox</string>
+</resources>

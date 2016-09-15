@@ -10,7 +10,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="udacity_project.myapplication.LogInActivity"
-    tools:showIn="@layout/activity_log_in">
+    tools:showIn="@layout/activity_log_in"
+    android:orientation="vertical"
+    android:background="@drawable/fruit_4">
 
     <LinearLayout
         android:id="@+id/email_login_form"
@@ -28,9 +30,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_username"
+                android:textColorHint="#ffffff"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:inputType="text"/>
+                android:inputType="text"
+                android:textColor="#ffffff"/>
 
         </android.support.design.widget.TextInputLayout>
 

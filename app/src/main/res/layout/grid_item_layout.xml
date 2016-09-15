@@ -35,6 +35,7 @@
             android:background="@null"
             android:contentDescription="@string/descriptionButtonText"
             android:src="@android:drawable/star_big_on" />
+
     </RelativeLayout>
 
 </LinearLayout>

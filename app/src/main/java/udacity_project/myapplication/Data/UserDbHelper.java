@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by Krenare Rexhepi on 7/10/2016.
  */
 public class UserDbHelper extends SQLiteOpenHelper {
+
     // If you change the database schema, you must increment the database version.
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Drinks.db";
@@ -36,7 +37,8 @@ public class UserDbHelper extends SQLiteOpenHelper {
                     DrinksContract.DrinksEntry.COLUMN_DRINK_RECIPE + TEXT_TYPE + COMMA_SEP +
                     DrinksContract.DrinksEntry.COLUMN_IS_DETOX + TEXT_TYPE + COMMA_SEP +
                     DrinksContract.DrinksEntry.COLUMN_IMAGE + " BLOB" + COMMA_SEP +
-                    DrinksContract.DrinksEntry.COLUMN_NAME_USERNAME_DRINK + TEXT_TYPE +
+                    DrinksContract.DrinksEntry.COLUMN_NAME_USERNAME_DRINK + TEXT_TYPE + COMMA_SEP +
+                    DrinksContract.DrinksEntry.COLUMN_IS_FAVORITE + TEXT_TYPE +
                     " )";
 
     private static final String SQL_DELETE_ENTRIES_DRINK =
@@ -57,5 +59,14 @@ public class UserDbHelper extends SQLiteOpenHelper {
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
+    }
+
+
+    public void updateItemFavorite(SQLiteDatabase db, int itemId, boolean fav){
+        String sqlCode = "update "+ DrinksContract.DrinksEntry.TABLE_NAME_DRINK + " set " +
+        DrinksContract.DrinksEntry.COLUMN_IS_FAVORITE + " = "
+        + String.valueOf( fav) + " where " + DrinksContract.DrinksEntry._ID_DRINK + " = " +itemId;
+
+        db.execSQL(sqlCode);
     }
 }

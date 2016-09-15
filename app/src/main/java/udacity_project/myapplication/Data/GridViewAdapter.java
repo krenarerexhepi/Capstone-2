@@ -2,6 +2,9 @@ package udacity_project.myapplication.Data;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import udacity_project.myapplication.R;
+import udacity_project.myapplication.*;
 
 /**
  * Created by Krenare Rexhepi on 8/29/2016.
@@ -32,7 +35,8 @@ public class GridViewAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        ViewHolder holder = null;
+        ViewHolder holder;
+        final ImageItem item = (ImageItem) data.get(position);
 
         if (row == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -55,6 +59,20 @@ public class GridViewAdapter extends ArrayAdapter {
                                             android.R.drawable.star_big_off :
                                             android.R.drawable.star_big_on));
                     btn.setTag(!isFav);
+                    updateFavoriteItemInDb(item.getId(), !isFav);
+                }
+            });
+            holder.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String itemId =  item.getId();
+                    Intent intent = new Intent(getContext(), udacity_project.myapplication.AddDrinkActivity.class);
+                    intent.putExtra("EXTRA_ID", itemId);
+                    intent.putExtra("EXTRA_MESSAGE", "");
+                    context.startActivity(intent);
+
+
                 }
             });
 
@@ -63,7 +81,7 @@ public class GridViewAdapter extends ArrayAdapter {
             holder = (ViewHolder) row.getTag();
         }
 
-        ImageItem item = (ImageItem) data.get(position);
+
         holder.imageTitle.setText(item.getTitle());
         holder.image.setImageBitmap(item.getImage());
 
@@ -75,6 +93,21 @@ public class GridViewAdapter extends ArrayAdapter {
         holder.imageButton.setTag(item.getFavorite());
 
         return row;
+    }
+
+    private void updateFavoriteItemInDb(String id, Boolean isFav) {
+        UserDbHelper mDbHelper;
+        mDbHelper = new UserDbHelper(getContext());
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+            Cursor data=  db.rawQuery("update tblDrink set isFavorite=? where idDrink=?",
+                        new String[] {isFav.toString(),id });
+        data.moveToFirst();
+        while (data.getCount() > 0) {
+            String drinkName = data.getString(data.getColumnIndex("drinkname"));
+            String isFav2 = data.getString(data.getColumnIndex("isFavorite"));
+            String id2 = data.getString(data.getColumnIndex("idDrink"));
+        }
     }
 
     static class ViewHolder {

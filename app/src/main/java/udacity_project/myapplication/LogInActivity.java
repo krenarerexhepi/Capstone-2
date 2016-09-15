@@ -1,6 +1,8 @@
 package udacity_project.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -28,6 +30,20 @@ public class LogInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_log_in);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+       // SharedPreferences prefs = getSharedPreferences("PREFERENCE", MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("PREFERENCE",Context.MODE_PRIVATE);
+        Boolean loggedIn = sharedPref.getBoolean("LoggedUser",false);
+        String loggedUsername = sharedPref.getString("LoggedUsername","");
+
+        //logged in
+        if(loggedIn){
+
+            Intent intent = new Intent(getBaseContext(), MainActivity.class);
+            intent.putExtra(EXTRA_MESSAGE, loggedUsername);
+            startActivity(intent);
+       //    if showLogin("krenare");
+//return;
+        }
 
         final Button btnLogIn= (Button)findViewById(R.id.sign_in_button);
         final Button btnRegister=(Button)findViewById(R.id.register);
@@ -40,6 +56,7 @@ public class LogInActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
 
+
                 SQLiteDatabase db = mDbHelper.getReadableDatabase();
                 String name = String.valueOf(username.getText());
                 String pass = String.valueOf(password.getText());
@@ -51,9 +68,16 @@ public class LogInActivity extends AppCompatActivity {
                 boolean isUsername=false;
                 while (data.getCount() > 0) {
                     isUsername=true;
-                    String id = data.getString(data.getColumnIndex("username"));
+                    String id = data.getString(data.getColumnIndex(getString(R.string.username)));
                     if(id.equals(name)) {
-                         intent.putExtra(EXTRA_MESSAGE, name);
+                        // Restore preferences
+                        SharedPreferences sharedPref = getSharedPreferences("PREFERENCE",Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putBoolean("LoggedUser", true);
+                        editor.putString("LoggedUsername", name);
+                        editor.apply();
+
+                        intent.putExtra(EXTRA_MESSAGE, name);
                          startActivity(intent);
                         break;
                     }
@@ -61,10 +85,10 @@ public class LogInActivity extends AppCompatActivity {
 
                     }
                 }
-                if(isUsername==false)
+                if(!isUsername)
                 {
-                    Snackbar.make(v,"The username or password do not match !", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    Snackbar.make(v, R.string.username_or_pass, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.action, null).show();
 
                 }
 
@@ -81,15 +105,18 @@ public class LogInActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
 
-
-
+    private void showLogin(String username) {
+        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+         intent.putExtra(EXTRA_MESSAGE, username);
+        startActivity(intent);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_log_in, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -101,10 +128,15 @@ public class LogInActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStop() {
+    super.onStop();
     }
 }

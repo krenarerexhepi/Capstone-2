@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getBaseContext(), AddDrinkActivity.class);
                 intent.putExtra(EXTRA_MESSAGE, username);
+                intent.putExtra("EXTRA_ID","");
                 startActivity(intent);
             }
         });

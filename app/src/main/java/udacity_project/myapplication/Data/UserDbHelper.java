@@ -10,16 +10,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class UserDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "Drinks.db";
+   // public static final int DATABASE_VERSION = 1;
+   // public static final String DATABASE_NAME = "Drinks.db";
 
     public UserDbHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DrinksProvider.DATABASE_NAME, null, DrinksProvider.DATABASE_VERSION);
     }
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String COMMA_SEP = ",";
-    private static final String SQL_CREATE_ENTRIES =
+  /*  private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + DrinksContract.DrinksEntry.TABLE_NAME + " (" +
                    DrinksContract.DrinksEntry._ID + " INTEGER PRIMARY KEY  autoincrement," +
                    DrinksContract.DrinksEntry.COLUMN_NAME_USERNAME + TEXT_TYPE + COMMA_SEP +
@@ -44,16 +44,18 @@ public class UserDbHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_ENTRIES_DRINK =
             "DROP TABLE IF EXISTS " + DrinksContract.DrinksEntry.TABLE_NAME_DRINK;
 
+    */
+
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
-        db.execSQL(SQL_CREATE_ENTRIES_DRINK);
+        db.execSQL(DrinksProvider.SQL_CREATE_ENTRIES);
+        db.execSQL(DrinksProvider.SQL_CREATE_ENTRIES_DRINK);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
-        db.execSQL(SQL_DELETE_ENTRIES);
-        db.execSQL(SQL_DELETE_ENTRIES_DRINK);
+        db.execSQL(DrinksProvider.SQL_DELETE_ENTRIES);
+        db.execSQL(DrinksProvider.SQL_DELETE_ENTRIES_DRINK);
         onCreate(db);
     }
 
@@ -62,11 +64,4 @@ public class UserDbHelper extends SQLiteOpenHelper {
     }
 
 
-    public void updateItemFavorite(SQLiteDatabase db, int itemId, boolean fav){
-        String sqlCode = "update "+ DrinksContract.DrinksEntry.TABLE_NAME_DRINK + " set " +
-        DrinksContract.DrinksEntry.COLUMN_IS_FAVORITE + " = "
-        + String.valueOf( fav) + " where " + DrinksContract.DrinksEntry._ID_DRINK + " = " +itemId;
-
-        db.execSQL(sqlCode);
-    }
-}
+   }

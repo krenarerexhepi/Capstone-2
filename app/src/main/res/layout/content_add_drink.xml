@@ -18,8 +18,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 <ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="400px"
+    android:layout_height="300px"
     android:id="@+id/imageView"
     android:layout_gravity="center" />
 
@@ -30,18 +30,15 @@
             android:hint="@string/drink_name"
             android:imeOptions="actionUnspecified"
             android:inputType="text"
-            android:maxLines="1"
-            android:singleLine="true"
             android:layout_centerHorizontal="true" />
         <EditText
             android:id="@+id/recipe"
             android:layout_width="match_parent"
-            android:layout_height="118dp"
+            android:layout_height="@dimen/layout_height"
             android:hint="@string/recipe"
             android:imeOptions="actionUnspecified"
             android:inputType="textMultiLine"
             android:maxLines="1"
-            android:singleLine="true"
             android:layout_centerHorizontal="true" />
 
         <CheckBox android:layout_width="match_parent"

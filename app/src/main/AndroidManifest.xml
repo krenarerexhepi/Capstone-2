@@ -40,6 +40,16 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-    </application>
+
+        <provider android:name=".Data.DrinksProvider"
+            android:authorities="com.example.provider.Data.DrinksProvider" />
+
+        <receiver android:name=".Data.DrinksWidgetProvider" >
+                <intent-filter>
+                    <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                </intent-filter>
+                <meta-data android:name="android.appwidget.provider"
+            android:resource="@xml/simple_widget_info"/>
+        </receiver></application>
 
 </manifest>

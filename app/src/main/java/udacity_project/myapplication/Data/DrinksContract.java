@@ -5,7 +5,7 @@ import android.provider.BaseColumns;
 /**
  * Created by Krenare Rexhepi on 7/10/2016.
  */
-public class DrinksContract {
+public class DrinksContract  {
         // To prevent someone from accidentally instantiating the contract class,
         // give it an empty constructor.
         public DrinksContract() {}

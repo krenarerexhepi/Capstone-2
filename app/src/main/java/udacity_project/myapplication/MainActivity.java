@@ -31,6 +31,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.util.ArrayList;
 
 import udacity_project.myapplication.Data.BitmapUtility;
+import udacity_project.myapplication.Data.DrinksProvider;
 import udacity_project.myapplication.Data.GridViewAdapter;
 import udacity_project.myapplication.Data.ImageItem;
 import udacity_project.myapplication.Data.UserDbHelper;

@@ -3,4 +3,15 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="marginTop">16dp</dimen>
+    <dimen name="colum_with">100dp</dimen>
+    <dimen name="spacing">1dp</dimen>
+    <dimen name="layout_height">118dp</dimen>
+    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="marginTopLogIn">120dp</dimen>
+    <dimen name="topItem">5dp</dimen>
+    <dimen name="widthitem">150dp</dimen>
+    <dimen name="widthheight">100dp</dimen>
+    <dimen name="textSize">14sp</dimen>
+    <dimen name="ImageButtonWidth">25dp</dimen>
 </resources>

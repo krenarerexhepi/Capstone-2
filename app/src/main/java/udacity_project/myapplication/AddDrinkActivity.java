@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -17,12 +18,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import udacity_project.myapplication.Data.BitmapUtility;
 import udacity_project.myapplication.Data.DrinksContract;
@@ -45,9 +50,7 @@ public class AddDrinkActivity extends AppCompatActivity {
 
         Button button = (Button) findViewById(R.id.uploadImage);
         Button btnSave = (Button) findViewById(R.id.btnSaveDrinks);
-        switch (user = getIntent().getStringExtra("EXTRA_MESSAGE"))
-        {
-        }
+        user = getIntent().getStringExtra("EXTRA_MESSAGE");
 
 
         drinkName =(EditText)findViewById(R.id.drinksName);
@@ -270,4 +273,33 @@ public class AddDrinkActivity extends AppCompatActivity {
      public void onBackPressed() {
         super.onBackPressed();
     }
-}
+
+    private void loadIntent(Bitmap bitmap) {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        Uri screenshotUri = Uri.parse(MediaStore.Images.Media.EXTERNAL_CONTENT_URI + "/" + bitmap);
+
+        sharingIntent.setType("image/jpeg");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+        startActivity(Intent.createChooser(sharingIntent, "Share image using"));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_details, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_share) {
+            Bitmap b= BitmapUtility.getImageByteToBitmap(bitmapdata);
+            loadIntent(b);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    }

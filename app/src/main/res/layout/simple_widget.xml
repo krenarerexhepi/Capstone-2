@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+     android:padding="@dimen/widget_margin"
+    android:background="@color/bacgroundOfItem"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+         <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/fruit_1"/>
+
+    <TextView
+        android:id="@+id/txtDrinkName"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="000"
+        android:textSize="@dimen/abc_text_size_large_material"
+        android:textStyle="bold"/>
+
+    </LinearLayout>

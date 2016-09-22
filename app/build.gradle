@@ -1,9 +1,27 @@
 apply plugin: 'com.android.application'
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+// Initialize a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+
+// Load your keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 
 android {
-    compileSdkVersion 'Google Inc.:Google APIs:23'
-    buildToolsVersion "24.0.0"
+    signingConfigs {
+        config {
+                     keyAlias keystoreProperties['keyAlias']
+                    keyPassword keystoreProperties['keyPassword']
+                    storePassword keystoreProperties['storePassword']
+                storeFile file('C:/Users/betim/Documents/Aplikacionet/drinksApp.jks')
 
+        }
+    }
+    compileSdkVersion 'Google Inc.:Google APIs:23'
+    buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId "udacity_project.myapplication"
         minSdkVersion 21
@@ -15,6 +33,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }

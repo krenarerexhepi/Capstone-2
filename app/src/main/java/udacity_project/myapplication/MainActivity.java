@@ -15,7 +15,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
@@ -31,7 +30,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.util.ArrayList;
 
 import udacity_project.myapplication.Data.BitmapUtility;
-import udacity_project.myapplication.Data.DrinksProvider;
 import udacity_project.myapplication.Data.GridViewAdapter;
 import udacity_project.myapplication.Data.ImageItem;
 import udacity_project.myapplication.Data.UserDbHelper;
@@ -63,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        username = getIntent().getStringExtra("EXTRA_MESSAGE");
+        username = getIntent().getStringExtra(getString(R.string.EXTRA_MESSAGE));
 
         img= (ImageView)findViewById(R.id.imgMain);
         imgButton=(ImageButton) findViewById(R.id.imageButton);
@@ -73,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getBaseContext(), AddDrinkActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, username);
-                intent.putExtra("EXTRA_ID","");
+                intent.putExtra(getString(R.string.EXTRA_MESSAGE), username);
+                intent.putExtra(getString(R.string.EXTRA_ID),"");
                 startActivity(intent);
             }
         });
@@ -109,21 +107,22 @@ String value="";
 
       try{
           Cursor  data= null;
-if(value.equals("favorite")){
-    data =  db.rawQuery("select * from tblDrink where isFavorite=? and username=?",
-            new String[] {"true",username });
-}
-          else if(value.equals("detox")){
-    data =  db.rawQuery("select * from tblDrink where isdetox=? and username=?",
-            new String[]{"true",username});
-}
-          else
-{
-    data = db.rawQuery(getString(R.string.select_for_username),
-            new String[] {username });
+          switch (value) {
+              case "favorite":
+                  data = db.rawQuery("select * from tblDrink where isFavorite=? and username=?",
+                          new String[]{"true", username});
+                  break;
+              case "detox":
+                  data = db.rawQuery("select * from tblDrink where isdetox=? and username=?",
+                          new String[]{"true", username});
+                  break;
+              default:
+                  data = db.rawQuery(getString(R.string.select_for_username),
+                          new String[]{username});
 
 
-}
+                  break;
+          }
           data.moveToFirst();
           while (data.getCount() > 0) {
               String drinkName = data.getString(data.getColumnIndex(getString(R.string.drinkname)));
@@ -201,10 +200,10 @@ if(value.equals("favorite")){
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-            SharedPreferences sharedPref = getSharedPreferences("PREFERENCE",Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = getSharedPreferences(getString(R.string.PREFERENCE),Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
-                     editor.remove("LoggedUser");
-                    editor.remove("LoggedUsername");
+                     editor.remove(getString(R.string.LoggedUser));
+                    editor.remove(getString(R.string.LoggedUsername));
                      editor.clear();
                       editor.commit();
             editor.apply();
@@ -234,12 +233,4 @@ if(value.equals("favorite")){
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadIntent() {
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        Uri screenshotUri = Uri.parse(MediaStore.Images.Media.EXTERNAL_CONTENT_URI + "/" + images);
-
-        sharingIntent.setType("image/jpeg");
-        sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-        startActivity(Intent.createChooser(sharingIntent, "Share image using"));
-    }
 }

@@ -34,7 +34,7 @@
     <string name="add_photo">Add Photo!</string>
     <string name="error_data">Error data</string>
     <string name="action">Action</string>
-    <string name="data_saved">"Data saved "</string>
+    <string name="data_saved">Data saved</string>
     <string name="username_or_pass">The username or password do not match !</string>
     <string name="username">username</string>
     <string name="drinkname">drinkname</string>
@@ -48,4 +48,17 @@
     <string name="no_detox_drinks">Do not have detox drinks to display!!</string>
     <string name="action_load_all">Load all</string>
     <string name="is_detox">Is detox</string>
+    <string name="EXTRA_ID">EXTRA_ID</string>
+    <string name="EXTRA_MESSAGE">EXTRA_MESSAGE</string>
+    <string name="Select_from_tblDrink">select * from tblDrink where idDrink=?</string>
+    <string name="detox">detox</string>
+    <string name="updatetblDrink">update tblDrink set drinkname=?,recipe=?,isdetox=? where idDrink=?</string>
+    <string name="shareImageUsing">Share image using</string>
+    <string name="imageType">image/jpeg</string>
+    <string name="PREFERENCE">PREFERENCE</string>
+    <string name="LoggedUser">LoggedUser</string>
+    <string name="LoggedUsername">LoggedUsername</string>
+    <string name="selectForUsername">select * from tblUser where username=? and password=?</string>
+    <string name="WriteUsername">User should have username !!</string>
+    <string name="TakenUsername">This username is taken. Please chose other!</string>
 </resources>

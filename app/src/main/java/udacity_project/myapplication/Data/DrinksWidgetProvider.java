@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.RemoteViews;
@@ -27,25 +28,36 @@ public class DrinksWidgetProvider extends AppWidgetProvider {
         public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
             final int count = appWidgetIds.length;
 
+
             for (int i = 0; i < count; i++) {
                 int widgetId = appWidgetIds[i];
 
                 UserDbHelper mDbHelper;
                 mDbHelper = new UserDbHelper(context);
                 SQLiteDatabase db = mDbHelper.getReadableDatabase();
-               Cursor data = db.rawQuery("select * from tblDrink where username=?",
-                        new String[] {"k" });
-
+                SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.PREFERENCE),Context.MODE_PRIVATE);
+                Boolean loggedIn = sharedPref.getBoolean(context.getString(R.string.LoggedUser),false);
+                String loggedUsername = sharedPref.getString(context.getString(R.string.LoggedUsername),"");
                 String drinkName="";
-                data.moveToFirst();
-                while (data.getCount() > 0) {
-                    drinkName = data.getString(data.getColumnIndex("drinkname"));
-                    if (data.isLast()) {
-                        break;
-                    } else {
-                        data.moveToNext();
+                //logged in
+                if(loggedIn){
+                    Cursor data = db.rawQuery("select * from tblDrink where username=?",
+                            new String[] {loggedUsername });
+
+
+                    data.moveToFirst();
+                    while (data.getCount() > 0) {
+                        drinkName = data.getString(data.getColumnIndex("drinkname"));
+                        if (data.isLast()) {
+                            break;
+                        } else {
+                            data.moveToNext();
+                        }
                     }
+
+
                 }
+
 
                Intent intent = new Intent(context, DrinksWidgetProvider.class);
                 intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);

@@ -22,7 +22,6 @@ public class LogInActivity extends AppCompatActivity {
     UserDbHelper mDbHelper;
     EditText username;
     EditText password;
-    String EXTRA_MESSAGE="EXTRA_MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,19 +29,16 @@ public class LogInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_log_in);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-       // SharedPreferences prefs = getSharedPreferences("PREFERENCE", MODE_PRIVATE);
-        SharedPreferences sharedPref = getSharedPreferences("PREFERENCE",Context.MODE_PRIVATE);
-        Boolean loggedIn = sharedPref.getBoolean("LoggedUser",false);
-        String loggedUsername = sharedPref.getString("LoggedUsername","");
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.PREFERENCE),Context.MODE_PRIVATE);
+        Boolean loggedIn = sharedPref.getBoolean(getString(R.string.LoggedUser),false);
+        String loggedUsername = sharedPref.getString(getString(R.string.LoggedUsername),"");
 
         //logged in
         if(loggedIn){
 
             Intent intent = new Intent(getBaseContext(), MainActivity.class);
-            intent.putExtra(EXTRA_MESSAGE, loggedUsername);
+            intent.putExtra(getString(R.string.EXTRA_MESSAGE), loggedUsername);
             startActivity(intent);
-       //    if showLogin("krenare");
-//return;
         }
 
         final Button btnLogIn= (Button)findViewById(R.id.sign_in_button);
@@ -61,7 +57,7 @@ public class LogInActivity extends AppCompatActivity {
                 String name = String.valueOf(username.getText());
                 String pass = String.valueOf(password.getText());
 
-                Cursor data = db.rawQuery("select * from tblUser where username=? and password=?",
+                Cursor data = db.rawQuery(getString(R.string.selectForUsername),
                         new String[] { name,pass});
 
                 data.moveToFirst();
@@ -71,13 +67,13 @@ public class LogInActivity extends AppCompatActivity {
                     String id = data.getString(data.getColumnIndex(getString(R.string.username)));
                     if(id.equals(name)) {
                         // Restore preferences
-                        SharedPreferences sharedPref = getSharedPreferences("PREFERENCE",Context.MODE_PRIVATE);
+                        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.PREFERENCE),Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putBoolean("LoggedUser", true);
-                        editor.putString("LoggedUsername", name);
+                        editor.putBoolean(getString(R.string.LoggedUser), true);
+                        editor.putString(getString(R.string.LoggedUsername), name);
                         editor.apply();
 
-                        intent.putExtra(EXTRA_MESSAGE, name);
+                        intent.putExtra(getString(R.string.EXTRA_MESSAGE), name);
                          startActivity(intent);
                         break;
                     }
@@ -109,7 +105,7 @@ public class LogInActivity extends AppCompatActivity {
 
     private void showLogin(String username) {
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
-         intent.putExtra(EXTRA_MESSAGE, username);
+         intent.putExtra(getString(R.string.EXTRA_MESSAGE), username);
         startActivity(intent);
     }
 

@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -27,7 +26,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+
+import java.io.ByteArrayOutputStream;
 
 import udacity_project.myapplication.Data.BitmapUtility;
 import udacity_project.myapplication.Data.DrinksContract;
@@ -41,6 +41,9 @@ public class AddDrinkActivity extends AppCompatActivity {
     ImageView img;
     String user;
     String id;
+    UserDbHelper mDbHelper = new UserDbHelper(getBaseContext());
+    byte[] bitmapdata;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +53,12 @@ public class AddDrinkActivity extends AppCompatActivity {
 
         Button button = (Button) findViewById(R.id.uploadImage);
         Button btnSave = (Button) findViewById(R.id.btnSaveDrinks);
-        user = getIntent().getStringExtra("EXTRA_MESSAGE");
-
-
+        user = getIntent().getStringExtra(getString(R.string.EXTRA_MESSAGE));
         drinkName =(EditText)findViewById(R.id.drinksName);
         drinkRecipe = (EditText)findViewById(R.id.recipe);
         detox = (CheckBox)findViewById(R.id.isdetox);
         img = (ImageView)findViewById(R.id.imageView);
-
-        id = getIntent().getStringExtra("EXTRA_ID");
+        id = getIntent().getStringExtra(getString(R.string.EXTRA_ID));
 
         if(!id.equals("") && !id.equals(null))
         {
@@ -68,13 +68,13 @@ public class AddDrinkActivity extends AppCompatActivity {
 
             try{
                 Cursor  data= null;
-                    data =  db.rawQuery("select * from tblDrink where idDrink=?",
+                    data =  db.rawQuery(getString(R.string.Select_from_tblDrink),
                             new String[] { id });
                 data.moveToFirst();
                 while (data.getCount() > 0) {
                     String drinkName2 = data.getString(data.getColumnIndex(getString(R.string.drinkname)));
-                    String recipe = data.getString(data.getColumnIndex("recipe"));
-                    String isDetox = data.getString(data.getColumnIndex("isdetox"));
+                    String recipe = data.getString(data.getColumnIndex(getString(R.string.recipe)));
+                    String isDetox = data.getString(data.getColumnIndex(getString(R.string.isdetox)));
                     byte[] image = data.getBlob(data.getColumnIndex(getString(R.string.drinkimg)));
                     drinkName.setText(drinkName2);
                     drinkRecipe.setText(recipe);
@@ -92,8 +92,6 @@ public class AddDrinkActivity extends AppCompatActivity {
                     BitmapUtility b = new BitmapUtility();
                     bitmapdata=image;
                     img.setImageBitmap(b.getImageByteToBitmap(image));
-
-
 
                     btnSave.setText("Update data");
                     if (data.isLast()) {
@@ -151,13 +149,19 @@ public class AddDrinkActivity extends AppCompatActivity {
             detoxValue="false";
         }
         ContentValues values = new ContentValues();
+        ContentValues values2 = new ContentValues();
         values.put(DrinksContract.DrinksEntry.COLUMN_DRINK_NAME, drinkName.getText().toString());
         values.put(DrinksContract.DrinksEntry.COLUMN_DRINK_RECIPE, drinkRecipe.getText().toString());
         values.put(DrinksContract.DrinksEntry.COLUMN_IS_DETOX, detoxValue);
-        values.put(DrinksContract.DrinksEntry.COLUMN_IMAGE, bitmapdata);
+        values2.put(DrinksContract.DrinksEntry.COLUMN_IMAGE, bitmapdata);
         try {
-            Cursor data=  db.rawQuery("update tblDrink set drinkname=?,recipe=?,drinkimg=?, isdetox=? where idDrink=?",
-                    new String[] {drinkName.getText().toString(),drinkRecipe.getText().toString(), bitmapdata.toString(), detoxValue.toString(),id });
+            Cursor data=  db.rawQuery(getString(R.string.updatetblDrink),
+                    new String[] {drinkName.getText().toString(),drinkRecipe.getText().toString(), detoxValue.toString(),id });
+            db.insert(
+                    DrinksContract.DrinksEntry.TABLE_NAME_DRINK,
+                    id,
+                    values2);
+
             data.moveToFirst();
             while (data.getCount() > 0) {
                 String drinkme = data.getString(data.getColumnIndex(getString(R.string.drinkname)));
@@ -175,10 +179,14 @@ public class AddDrinkActivity extends AppCompatActivity {
 
     }
 
-    UserDbHelper mDbHelper = new UserDbHelper(getBaseContext());
-
     public void saveDrinkData(View view)
     {
+        if(drinkName.getText().toString().equals(null)||drinkName.getText().toString().equals("")||drinkName.getText().toString().equals(" "))
+        {
+            Snackbar.make(view, "Drink should have name !!", Snackbar.LENGTH_LONG)
+                    .setAction(R.string.action, null).show();
+            return;
+        }
         mDbHelper = new UserDbHelper(getBaseContext());
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -196,7 +204,21 @@ public class AddDrinkActivity extends AppCompatActivity {
         values.put(DrinksContract.DrinksEntry.COLUMN_DRINK_NAME, drinkName.getText().toString());
         values.put(DrinksContract.DrinksEntry.COLUMN_DRINK_RECIPE, drinkRecipe.getText().toString());
         values.put(DrinksContract.DrinksEntry.COLUMN_IS_DETOX, detoxValue);
-        values.put(DrinksContract.DrinksEntry.COLUMN_IMAGE, bitmapdata);
+      //  values.put(DrinksContract.DrinksEntry.COLUMN_IMAGE, R.drawable.fruit_4);
+        if(bitmapdata==(null))
+        {
+            Drawable d = getDrawable(R.drawable.fruit_4);
+            Bitmap bit =((BitmapDrawable)d).getBitmap();
+          //  ByteArrayOutputStream stream =new ByteArrayOutputStream();
+            //bit.compress(Bitmap.CompressFormat.JPEG,100,stream);
+            bitmapdata= BitmapUtility.getBytes(bit);
+            values.put(DrinksContract.DrinksEntry.COLUMN_IMAGE,bitmapdata);
+        }
+        else
+        {
+            values.put(DrinksContract.DrinksEntry.COLUMN_IMAGE,bitmapdata);
+
+        }
         values.put(DrinksContract.DrinksEntry.COLUMN_NAME_USERNAME_DRINK, user);
         values.put(DrinksContract.DrinksEntry.COLUMN_IS_FAVORITE, "false");
         try {
@@ -217,6 +239,7 @@ public class AddDrinkActivity extends AppCompatActivity {
         }
 
     }
+
     private void selectImage() {
         final CharSequence[] options = {getString(R.string.chose_gallery),getString(R.string.cancel) };
 
@@ -243,7 +266,6 @@ public class AddDrinkActivity extends AppCompatActivity {
         builder.show();
     }
 
-    byte[] bitmapdata;
     public void onActivityResult(int requestcode,int resultcode,Intent intent)
     {
         super.onActivityResult(requestcode, resultcode, intent);
@@ -278,9 +300,9 @@ public class AddDrinkActivity extends AppCompatActivity {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         Uri screenshotUri = Uri.parse(MediaStore.Images.Media.EXTERNAL_CONTENT_URI + "/" + bitmap);
 
-        sharingIntent.setType("image/jpeg");
+        sharingIntent.setType(getString(R.string.imageType));
         sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-        startActivity(Intent.createChooser(sharingIntent, "Share image using"));
+        startActivity(Intent.createChooser(sharingIntent, getString(R.string.shareImageUsing)));
     }
 
     @Override

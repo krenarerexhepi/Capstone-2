@@ -13,10 +13,17 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     signingConfigs {
         config {
+<<<<<<< HEAD
                keyAlias keystoreProperties['keyAlias']
                keyPassword keystoreProperties['keyPassword']
                storePassword keystoreProperties['storePassword']
                storeFile file('C:/Users/betim/Documents/Aplikacionet/drinksApp.jks')
+=======
+                     keyAlias keystoreProperties['keyAlias']
+                    keyPassword keystoreProperties['keyPassword']
+                    storePassword keystoreProperties['storePassword']
+                storeFile file('C:/Users/betim/Documents/Aplikacionet/drinksApp.jks')
+>>>>>>> f7703b82103957aef2587a65c7fb3177975f3356
 
         }
     }

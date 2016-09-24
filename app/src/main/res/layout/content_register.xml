@@ -12,6 +12,7 @@
     tools:context="udacity_project.myapplication.RegisterActivity"
     tools:showIn="@layout/activity_register"
     android:background="@drawable/fruit_7">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_email"
-                android:inputType="text"/>
+                android:inputType="text" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -39,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_username"
-                android:inputType="text"/>
+                android:inputType="text" />
 
         </android.support.design.widget.TextInputLayout>
 

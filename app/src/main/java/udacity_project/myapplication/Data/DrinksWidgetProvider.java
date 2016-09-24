@@ -24,60 +24,60 @@ import static udacity_project.myapplication.R.id.username;
 
 public class DrinksWidgetProvider extends AppWidgetProvider {
 
-        @Override
-        public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-            final int count = appWidgetIds.length;
+    @Override
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        final int count = appWidgetIds.length;
 
 
-            for (int i = 0; i < count; i++) {
-                int widgetId = appWidgetIds[i];
+        for (int i = 0; i < count; i++) {
+            int widgetId = appWidgetIds[i];
 
-                UserDbHelper mDbHelper;
-                mDbHelper = new UserDbHelper(context);
-                SQLiteDatabase db = mDbHelper.getReadableDatabase();
-                SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.PREFERENCE),Context.MODE_PRIVATE);
-                Boolean loggedIn = sharedPref.getBoolean(context.getString(R.string.LoggedUser),false);
-                String loggedUsername = sharedPref.getString(context.getString(R.string.LoggedUsername),"");
-                String drinkName="";
-                //logged in
-                if(loggedIn){
-                    Cursor data = db.rawQuery("select * from tblDrink where username=?",
-                            new String[] {loggedUsername });
+            UserDbHelper mDbHelper;
+            mDbHelper = new UserDbHelper(context);
+            SQLiteDatabase db = mDbHelper.getReadableDatabase();
+            SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.PREFERENCE), Context.MODE_PRIVATE);
+            Boolean loggedIn = sharedPref.getBoolean(context.getString(R.string.LoggedUser), false);
+            String loggedUsername = sharedPref.getString(context.getString(R.string.LoggedUsername), "");
+            String drinkName = "";
+            //logged in
+            if (loggedIn) {
+                Cursor data = db.rawQuery("select * from tblDrink where username=?",
+                        new String[]{loggedUsername});
 
 
-                    data.moveToFirst();
-                    while (data.getCount() > 0) {
-                        drinkName = data.getString(data.getColumnIndex("drinkname"));
-                        if (data.isLast()) {
-                            break;
-                        } else {
-                            data.moveToNext();
-                        }
+                data.moveToFirst();
+                while (data.getCount() > 0) {
+                    drinkName = data.getString(data.getColumnIndex("drinkname"));
+                    if (data.isLast()) {
+                        break;
+                    } else {
+                        data.moveToNext();
                     }
-
-
                 }
 
 
-               Intent intent = new Intent(context, DrinksWidgetProvider.class);
-                intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+            }
 
 
-                Intent p_intent = new Intent(context, MainActivity.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, p_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent intent = new Intent(context, DrinksWidgetProvider.class);
+            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+
+
+            Intent p_intent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, p_intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
          /*       PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                         0, intent, PendingIntent.FLAG_UPDATE_CURRENT);*/
 
-                RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
-                        R.layout.simple_widget);
-                remoteViews.setOnClickPendingIntent(R.id.imageButton, pendingIntent);
-                remoteViews.setTextViewText(R.id.txtDrinkName, drinkName);
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
+                    R.layout.simple_widget);
+            remoteViews.setOnClickPendingIntent(R.id.imageButton, pendingIntent);
+            remoteViews.setTextViewText(R.id.txtDrinkName, drinkName);
 
 
-                appWidgetManager.updateAppWidget(widgetId, remoteViews);
-            }
+            appWidgetManager.updateAppWidget(widgetId, remoteViews);
         }
     }
+}

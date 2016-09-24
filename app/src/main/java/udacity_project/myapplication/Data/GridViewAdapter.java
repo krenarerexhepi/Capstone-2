@@ -52,7 +52,7 @@ public class GridViewAdapter extends ArrayAdapter {
 
                     Boolean isFav = (Boolean) view.getTag();
 
-                    ImageButton btn= (ImageButton) view;
+                    ImageButton btn = (ImageButton) view;
                     btn.setImageDrawable(
                             context.getDrawable(
                                     isFav ?
@@ -66,7 +66,7 @@ public class GridViewAdapter extends ArrayAdapter {
                 @Override
                 public void onClick(View view) {
 
-                    String itemId =  item.getId();
+                    String itemId = item.getId();
                     Intent intent = new Intent(getContext(), udacity_project.myapplication.AddDrinkActivity.class);
                     intent.putExtra("EXTRA_ID", itemId);
                     intent.putExtra("EXTRA_MESSAGE", "");
@@ -100,8 +100,8 @@ public class GridViewAdapter extends ArrayAdapter {
         mDbHelper = new UserDbHelper(getContext());
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-            Cursor data=  db.rawQuery("update tblDrink set isFavorite=? where idDrink=?",
-                        new String[] {isFav.toString(),id });
+        Cursor data = db.rawQuery("update tblDrink set isFavorite=? where idDrink=?",
+                new String[]{isFav.toString(), id});
         data.moveToFirst();
         while (data.getCount() > 0) {
             String drinkName = data.getString(data.getColumnIndex("drinkname"));

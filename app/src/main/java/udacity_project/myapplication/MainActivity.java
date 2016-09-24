@@ -38,11 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView img;
     String username;
-    String EXTRA_MESSAGE="EXTRA_MESSAGE";
     ImageButton imgButton;
     private FirebaseAnalytics mFirebaseAnalytics;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-
         // Initialize the Mobile Ads SDK.
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-1913927795422634~2973015302");
 
@@ -63,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         username = getIntent().getStringExtra(getString(R.string.EXTRA_MESSAGE));
 
-        img= (ImageView)findViewById(R.id.imgMain);
-        imgButton=(ImageButton) findViewById(R.id.imageButton);
+        img = (ImageView) findViewById(R.id.imgMain);
+        imgButton = (ImageButton) findViewById(R.id.imageButton);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getBaseContext(), AddDrinkActivity.class);
                 intent.putExtra(getString(R.string.EXTRA_MESSAGE), username);
-                intent.putExtra(getString(R.string.EXTRA_ID),"");
+                intent.putExtra(getString(R.string.EXTRA_ID), "");
                 startActivity(intent);
             }
         });
@@ -81,90 +76,92 @@ public class MainActivity extends AppCompatActivity {
         params.putString("full_text", username);
         mFirebaseAnalytics.logEvent("loged_user", params);
 
-       }
-String value="";
+    }
+
+    String value = "";
+
     private void LoadGridData() {
         LoadImages(value);
         GridView gridView = (GridView) findViewById(R.id.gridView);
         GridViewAdapter gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, getData());
         gridView.setAdapter(gridAdapter);
     }
+
     Bitmap valu;
     ArrayList<String> names;
     ArrayList<Bitmap> images;
     ArrayList<Boolean> favStatus;
     ArrayList<String> ids;
 
-    public  void LoadImages(String value)
-    {
-        names= new ArrayList<>();
+    public void LoadImages(String value) {
+        names = new ArrayList<>();
         images = new ArrayList<>();
         favStatus = new ArrayList<>();
-        ids =new ArrayList<>();
+        ids = new ArrayList<>();
         UserDbHelper mDbHelper;
         mDbHelper = new UserDbHelper(getBaseContext());
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-      try{
-          Cursor  data= null;
-          switch (value) {
-              case "favorite":
-                  data = db.rawQuery("select * from tblDrink where isFavorite=? and username=?",
-                          new String[]{"true", username});
-                  break;
-              case "detox":
-                  data = db.rawQuery("select * from tblDrink where isdetox=? and username=?",
-                          new String[]{"true", username});
-                  break;
-              default:
-                  data = db.rawQuery(getString(R.string.select_for_username),
-                          new String[]{username});
+        try {
+            Cursor data = null;
+            switch (value) {
+                case "favorite":
+                    data = db.rawQuery("select * from tblDrink where isFavorite=? and username=?",
+                            new String[]{"true", username});
+                    break;
+                case "detox":
+                    data = db.rawQuery("select * from tblDrink where isdetox=? and username=?",
+                            new String[]{"true", username});
+                    break;
+                default:
+                    data = db.rawQuery(getString(R.string.select_for_username),
+                            new String[]{username});
 
 
-                  break;
-          }
-          data.moveToFirst();
-          while (data.getCount() > 0) {
-              String drinkName = data.getString(data.getColumnIndex(getString(R.string.drinkname)));
-              String isFav = data.getString(data.getColumnIndex("isFavorite"));
-              String id = data.getString(data.getColumnIndex("idDrink"));
-              Boolean boolean1 = Boolean.valueOf(isFav);
+                    break;
+            }
+            data.moveToFirst();
+            while (data.getCount() > 0) {
+                String drinkName = data.getString(data.getColumnIndex(getString(R.string.drinkname)));
+                String isFav = data.getString(data.getColumnIndex("isFavorite"));
+                String id = data.getString(data.getColumnIndex("idDrink"));
+                Boolean boolean1 = Boolean.valueOf(isFav);
 
-              byte[] image = data.getBlob(data.getColumnIndex(getString(R.string.drinkimg)));
-              names.add(drinkName);
-              favStatus.add(boolean1);
+                byte[] image = data.getBlob(data.getColumnIndex(getString(R.string.drinkimg)));
+                names.add(drinkName);
+                favStatus.add(boolean1);
 
-              BitmapUtility b = new BitmapUtility();
-              valu =  b.getImageByteToBitmap(image);
-              Drawable d = new BitmapDrawable(valu);
-              img.setImageDrawable(d);
-              images.add(valu);
-              ids.add(id);
-              // break;
-              if (data.isLast()) {
-                  break;
-              } else {
-                  data.moveToNext();
-              }
-          }
+                BitmapUtility b = new BitmapUtility();
+                valu = b.getImageByteToBitmap(image);
+                Drawable d = new BitmapDrawable(valu);
+                img.setImageDrawable(d);
+                images.add(valu);
+                ids.add(id);
+                // break;
+                if (data.isLast()) {
+                    break;
+                } else {
+                    data.moveToNext();
+                }
+            }
 
-      }catch (Exception e)
-      {
-          Context context = getApplicationContext();
-          CharSequence text = getString(R.string.no_image);
-          int duration = Toast.LENGTH_SHORT;
+        } catch (Exception e) {
+            Context context = getApplicationContext();
+            CharSequence text = getString(R.string.no_image);
+            int duration = Toast.LENGTH_SHORT;
 
-          Toast toast = Toast.makeText(context, text, duration);
-          toast.show();
-      }
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
 
     }
+
     // Prepare some dummy data for gridview
     private ArrayList<ImageItem> getData() {
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
         imageItems.clear();
-        for(int i =0;i<images.size();i++)
-        {   imageItems.add(new ImageItem(images.get(i),names.get(i),favStatus.get(i),ids.get(i)));
+        for (int i = 0; i < images.size(); i++) {
+            imageItems.add(new ImageItem(images.get(i), names.get(i), favStatus.get(i), ids.get(i)));
 
         }
         return imageItems;
@@ -174,13 +171,16 @@ String value="";
     public void onResume() {
         super.onResume();  // Always call the superclass method first
         LoadGridData();
-           // Get the Camera instance as the activity achieves full user focus
+        // Get the Camera instance as the activity achieves full user focus
 
     }
-    /** Called before the activity is destroyed */
+
+    /**
+     * Called before the activity is destroyed
+     */
     @Override
     public void onDestroy() {
-         super.onDestroy();
+        super.onDestroy();
     }
 
     @Override
@@ -200,33 +200,31 @@ String value="";
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-            SharedPreferences sharedPref = getSharedPreferences(getString(R.string.PREFERENCE),Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                     editor.remove(getString(R.string.LoggedUser));
-                    editor.remove(getString(R.string.LoggedUsername));
-                     editor.clear();
-                      editor.commit();
+            SharedPreferences sharedPref = getSharedPreferences(getString(R.string.PREFERENCE), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.remove(getString(R.string.LoggedUser));
+            editor.remove(getString(R.string.LoggedUsername));
+            editor.clear();
+            editor.commit();
             editor.apply();
 
-            Intent loginscreen=new Intent(this,LogInActivity.class);
+            Intent loginscreen = new Intent(this, LogInActivity.class);
             loginscreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(loginscreen);
 
         }
-        if (id == R.id.action_main)
-        {
-            value="";
-              LoadGridData();
-
-        }
-        if (id == R.id.action_detox) {
-            value="detox";
+        if (id == R.id.action_main) {
+            value = "";
             LoadGridData();
 
         }
-        if (id == R.id.action_favorite)
-        {
-            value="favorite";
+        if (id == R.id.action_detox) {
+            value = "detox";
+            LoadGridData();
+
+        }
+        if (id == R.id.action_favorite) {
+            value = "favorite";
             LoadGridData();
 
         }

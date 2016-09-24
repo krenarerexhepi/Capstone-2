@@ -54,22 +54,21 @@ public class AddDrinkActivity extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.uploadImage);
         Button btnSave = (Button) findViewById(R.id.btnSaveDrinks);
         user = getIntent().getStringExtra(getString(R.string.EXTRA_MESSAGE));
-        drinkName =(EditText)findViewById(R.id.drinksName);
-        drinkRecipe = (EditText)findViewById(R.id.recipe);
-        detox = (CheckBox)findViewById(R.id.isdetox);
-        img = (ImageView)findViewById(R.id.imageView);
+        drinkName = (EditText) findViewById(R.id.drinksName);
+        drinkRecipe = (EditText) findViewById(R.id.recipe);
+        detox = (CheckBox) findViewById(R.id.isdetox);
+        img = (ImageView) findViewById(R.id.imageView);
         id = getIntent().getStringExtra(getString(R.string.EXTRA_ID));
 
-        if(!id.equals("") && !id.equals(null))
-        {
+        if (!id.equals("") && !id.equals(null)) {
             UserDbHelper mDbHelper;
             mDbHelper = new UserDbHelper(getBaseContext());
             SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-            try{
-                Cursor  data= null;
-                    data =  db.rawQuery(getString(R.string.Select_from_tblDrink),
-                            new String[] { id });
+            try {
+                Cursor data = null;
+                data = db.rawQuery(getString(R.string.Select_from_tblDrink),
+                        new String[]{id});
                 data.moveToFirst();
                 while (data.getCount() > 0) {
                     String drinkName2 = data.getString(data.getColumnIndex(getString(R.string.drinkname)));
@@ -79,18 +78,15 @@ public class AddDrinkActivity extends AppCompatActivity {
                     drinkName.setText(drinkName2);
                     drinkRecipe.setText(recipe);
 
-                    if(isDetox.equals("true"))
-                    {
+                    if (isDetox.equals("true")) {
                         detox.equals("true");
-                    }
-                    else
-                    {
+                    } else {
                         detox.equals("false");
                     }
 
 
                     BitmapUtility b = new BitmapUtility();
-                    bitmapdata=image;
+                    bitmapdata = image;
                     img.setImageBitmap(b.getImageByteToBitmap(image));
 
                     btnSave.setText("Update data");
@@ -100,9 +96,7 @@ public class AddDrinkActivity extends AppCompatActivity {
                         data.moveToNext();
                     }
                 }
-                }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Context context = getApplicationContext();
                 CharSequence text = getString(R.string.no_image);
                 int duration = Toast.LENGTH_SHORT;
@@ -112,24 +106,22 @@ public class AddDrinkActivity extends AppCompatActivity {
             }
 
         }
-        button.setOnClickListener(new View.OnClickListener()
-        {
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 selectImage();
             }
         });
 
-        btnSave.setOnClickListener(new View.OnClickListener()
-        {
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 v.toString();
-                if(!id.equals("") && !id.equals(null))
-                {updateDrink(v);}
-                else{saveDrinkData(v);}
+                if (!id.equals("") && !id.equals(null)) {
+                    updateDrink(v);
+                } else {
+                    saveDrinkData(v);
+                }
             }
         });
     }
@@ -139,14 +131,11 @@ public class AddDrinkActivity extends AppCompatActivity {
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-        String detoxValue="";
-        if(detox.isChecked())
-        {
-            detoxValue="true";
-        }
-        else
-        {
-            detoxValue="false";
+        String detoxValue = "";
+        if (detox.isChecked()) {
+            detoxValue = "true";
+        } else {
+            detoxValue = "false";
         }
         ContentValues values = new ContentValues();
         ContentValues values2 = new ContentValues();
@@ -155,8 +144,8 @@ public class AddDrinkActivity extends AppCompatActivity {
         values.put(DrinksContract.DrinksEntry.COLUMN_IS_DETOX, detoxValue);
         values2.put(DrinksContract.DrinksEntry.COLUMN_IMAGE, bitmapdata);
         try {
-            Cursor data=  db.rawQuery(getString(R.string.updatetblDrink),
-                    new String[] {drinkName.getText().toString(),drinkRecipe.getText().toString(), detoxValue.toString(),id });
+            Cursor data = db.rawQuery(getString(R.string.updatetblDrink),
+                    new String[]{drinkName.getText().toString(), drinkRecipe.getText().toString(), detoxValue.toString(), id});
             db.insert(
                     DrinksContract.DrinksEntry.TABLE_NAME_DRINK,
                     id,
@@ -169,9 +158,7 @@ public class AddDrinkActivity extends AppCompatActivity {
             db.close();
             Snackbar.make(view, R.string.data_saved, Snackbar.LENGTH_LONG)
                     .setAction(R.string.action, null).show();
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Snackbar.make(view, R.string.error_data, Snackbar.LENGTH_LONG)
                     .setAction(R.string.action, null).show();
             return;
@@ -179,10 +166,8 @@ public class AddDrinkActivity extends AppCompatActivity {
 
     }
 
-    public void saveDrinkData(View view)
-    {
-        if(drinkName.getText().toString().equals(null)||drinkName.getText().toString().equals("")||drinkName.getText().toString().equals(" "))
-        {
+    public void saveDrinkData(View view) {
+        if (drinkName.getText().toString().equals(null) || drinkName.getText().toString().equals("") || drinkName.getText().toString().equals(" ")) {
             Snackbar.make(view, "Drink should have name !!", Snackbar.LENGTH_LONG)
                     .setAction(R.string.action, null).show();
             return;
@@ -191,32 +176,26 @@ public class AddDrinkActivity extends AppCompatActivity {
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-        String detoxValue="";
-        if(detox.isChecked())
-        {
-            detoxValue="true";
-        }
-        else
-        {
-            detoxValue="false";
+        String detoxValue = "";
+        if (detox.isChecked()) {
+            detoxValue = "true";
+        } else {
+            detoxValue = "false";
         }
         ContentValues values = new ContentValues();
         values.put(DrinksContract.DrinksEntry.COLUMN_DRINK_NAME, drinkName.getText().toString());
         values.put(DrinksContract.DrinksEntry.COLUMN_DRINK_RECIPE, drinkRecipe.getText().toString());
         values.put(DrinksContract.DrinksEntry.COLUMN_IS_DETOX, detoxValue);
-      //  values.put(DrinksContract.DrinksEntry.COLUMN_IMAGE, R.drawable.fruit_4);
-        if(bitmapdata==(null))
-        {
-            Drawable d = getDrawable(R.drawable.fruit_4);
-            Bitmap bit =((BitmapDrawable)d).getBitmap();
-          //  ByteArrayOutputStream stream =new ByteArrayOutputStream();
+        //  values.put(DrinksContract.DrinksEntry.COLUMN_IMAGE, R.drawable.fruit_4);
+        if (bitmapdata == (null)) {
+            Drawable d = getDrawable(R.drawable.fruit_3);
+            Bitmap bit = ((BitmapDrawable) d).getBitmap();
+            //  ByteArrayOutputStream stream =new ByteArrayOutputStream();
             //bit.compress(Bitmap.CompressFormat.JPEG,100,stream);
-            bitmapdata= BitmapUtility.getBytes(bit);
-            values.put(DrinksContract.DrinksEntry.COLUMN_IMAGE,bitmapdata);
-        }
-        else
-        {
-            values.put(DrinksContract.DrinksEntry.COLUMN_IMAGE,bitmapdata);
+            bitmapdata = BitmapUtility.getBytes(bit);
+            values.put(DrinksContract.DrinksEntry.COLUMN_IMAGE, bitmapdata);
+        } else {
+            values.put(DrinksContract.DrinksEntry.COLUMN_IMAGE, bitmapdata);
 
         }
         values.put(DrinksContract.DrinksEntry.COLUMN_NAME_USERNAME_DRINK, user);
@@ -230,9 +209,7 @@ public class AddDrinkActivity extends AppCompatActivity {
             db.close();
             Snackbar.make(view, R.string.data_saved, Snackbar.LENGTH_LONG)
                     .setAction(R.string.action, null).show();
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Snackbar.make(view, R.string.error_data, Snackbar.LENGTH_LONG)
                     .setAction(R.string.action, null).show();
             return;
@@ -241,7 +218,7 @@ public class AddDrinkActivity extends AppCompatActivity {
     }
 
     private void selectImage() {
-        final CharSequence[] options = {getString(R.string.chose_gallery),getString(R.string.cancel) };
+        final CharSequence[] options = {getString(R.string.chose_gallery), getString(R.string.cancel)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(AddDrinkActivity.this);
 
@@ -252,12 +229,10 @@ public class AddDrinkActivity extends AppCompatActivity {
             @Override
 
             public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals(getString(R.string.chose_gallery)))
-                {
-                   Intent intent=new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if (options[item].equals(getString(R.string.chose_gallery))) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, 2);
-                }
-                else if (options[item].equals(getString(R.string.cancel))) {
+                } else if (options[item].equals(getString(R.string.cancel))) {
                     dialog.dismiss();
                 }
             }
@@ -266,33 +241,31 @@ public class AddDrinkActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void onActivityResult(int requestcode,int resultcode,Intent intent)
-    {
+    public void onActivityResult(int requestcode, int resultcode, Intent intent) {
         super.onActivityResult(requestcode, resultcode, intent);
-        if(resultcode==RESULT_OK)
-        {
-           if(requestcode==2)
-            {
+        if (resultcode == RESULT_OK) {
+            if (requestcode == 2) {
                 Uri selectedImage = intent.getData();
-                String[] filePath = { MediaStore.Images.Media.DATA };
-                Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
+                String[] filePath = {MediaStore.Images.Media.DATA};
+                Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
                 assert c != null;
                 c.moveToFirst();
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 String picturePath = c.getString(columnIndex);
                 c.close();
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-                Drawable drawable=new BitmapDrawable(thumbnail);
+                Drawable drawable = new BitmapDrawable(thumbnail);
                 img.setImageDrawable(drawable);
 
                 Drawable d; // the drawable (Captain Obvious, to the rescue!!!)
-                Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
-                bitmapdata= BitmapUtility.getBytes(bitmap);
+                Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+                bitmapdata = BitmapUtility.getBytes(bitmap);
 
             }
         }
     }
-     public void onBackPressed() {
+
+    public void onBackPressed() {
         super.onBackPressed();
     }
 
@@ -319,9 +292,9 @@ public class AddDrinkActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
-            Bitmap b= BitmapUtility.getImageByteToBitmap(bitmapdata);
+            Bitmap b = BitmapUtility.getImageByteToBitmap(bitmapdata);
             loadIntent(b);
         }
         return super.onOptionsItemSelected(item);
     }
-    }
+}

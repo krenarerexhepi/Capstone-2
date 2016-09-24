@@ -29,20 +29,20 @@ public class LogInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_log_in);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.PREFERENCE),Context.MODE_PRIVATE);
-        Boolean loggedIn = sharedPref.getBoolean(getString(R.string.LoggedUser),false);
-        String loggedUsername = sharedPref.getString(getString(R.string.LoggedUsername),"");
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.PREFERENCE), Context.MODE_PRIVATE);
+        Boolean loggedIn = sharedPref.getBoolean(getString(R.string.LoggedUser), false);
+        String loggedUsername = sharedPref.getString(getString(R.string.LoggedUsername), "");
 
         //logged in
-        if(loggedIn){
+        if (loggedIn) {
 
             Intent intent = new Intent(getBaseContext(), MainActivity.class);
             intent.putExtra(getString(R.string.EXTRA_MESSAGE), loggedUsername);
             startActivity(intent);
         }
 
-        final Button btnLogIn= (Button)findViewById(R.id.sign_in_button);
-        final Button btnRegister=(Button)findViewById(R.id.register);
+        final Button btnLogIn = (Button) findViewById(R.id.sign_in_button);
+        final Button btnRegister = (Button) findViewById(R.id.register);
 
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
@@ -58,31 +58,30 @@ public class LogInActivity extends AppCompatActivity {
                 String pass = String.valueOf(password.getText());
 
                 Cursor data = db.rawQuery(getString(R.string.selectForUsername),
-                        new String[] { name,pass});
+                        new String[]{name, pass});
 
                 data.moveToFirst();
-                boolean isUsername=false;
+                boolean isUsername = false;
                 while (data.getCount() > 0) {
-                    isUsername=true;
+                    isUsername = true;
                     String id = data.getString(data.getColumnIndex(getString(R.string.username)));
-                    if(id.equals(name)) {
+                    if (id.equals(name)) {
                         // Restore preferences
-                        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.PREFERENCE),Context.MODE_PRIVATE);
+                        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.PREFERENCE), Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putBoolean(getString(R.string.LoggedUser), true);
                         editor.putString(getString(R.string.LoggedUsername), name);
                         editor.apply();
 
                         intent.putExtra(getString(R.string.EXTRA_MESSAGE), name);
-                         startActivity(intent);
+                        startActivity(intent);
                         break;
-                    }
-                    else{data.moveToNext();
+                    } else {
+                        data.moveToNext();
 
                     }
                 }
-                if(!isUsername)
-                {
+                if (!isUsername) {
                     Snackbar.make(v, R.string.username_or_pass, Snackbar.LENGTH_LONG)
                             .setAction(R.string.action, null).show();
 
@@ -105,7 +104,7 @@ public class LogInActivity extends AppCompatActivity {
 
     private void showLogin(String username) {
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
-         intent.putExtra(getString(R.string.EXTRA_MESSAGE), username);
+        intent.putExtra(getString(R.string.EXTRA_MESSAGE), username);
         startActivity(intent);
     }
 
@@ -133,6 +132,6 @@ public class LogInActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-    super.onStop();
+        super.onStop();
     }
 }

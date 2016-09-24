@@ -12,7 +12,7 @@
     tools:context="udacity_project.myapplication.LogInActivity"
     tools:showIn="@layout/activity_log_in"
     android:orientation="vertical"
-    android:background="@drawable/fruit_4">
+    android:background="@drawable/fruit_6">
 
     <LinearLayout
         android:id="@+id/email_login_form"
@@ -32,7 +32,7 @@
                 android:hint="@string/prompt_username"
                 android:textColorHint="@color/colorWhite"
                 android:inputType="text"
-                android:textColor="@color/colorWhite"/>
+                android:textColor="@color/colorWhite" />
 
         </android.support.design.widget.TextInputLayout>
 

@@ -31,24 +31,20 @@ public class RegisterActivity extends AppCompatActivity {
 
         Button button = (Button) findViewById(R.id.register_in_button);
 
-        username =(EditText)findViewById(R.id.username);
-           password = (EditText)findViewById(R.id.password);
-           email = (EditText)findViewById(R.id.email);
+        username = (EditText) findViewById(R.id.username);
+        password = (EditText) findViewById(R.id.password);
+        email = (EditText) findViewById(R.id.email);
 
-                button.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        SaveData(v);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SaveData(v);
             }
         });
     }
 
-    public void SaveData(View view)
-    {
-        if(username.getText().toString().equals(null)||username.getText().toString().equals("")||username.getText().toString().equals(" "))
-        {
+    public void SaveData(View view) {
+        if (username.getText().toString().equals(null) || username.getText().toString().equals("") || username.getText().toString().equals(" ")) {
             Snackbar.make(view, R.string.WriteUsername, Snackbar.LENGTH_LONG)
                     .setAction(R.string.action, null).show();
             return;
@@ -63,12 +59,10 @@ public class RegisterActivity extends AppCompatActivity {
         values.put(DrinksContract.DrinksEntry.COLUMN_NAME_PASWORD, password.getText().toString());
         values.put(DrinksContract.DrinksEntry.COLUMN_NAME_EMAIL, email.getText().toString());
 
-        if(CheckUsername(username.getText().toString()))
-        {
-        Snackbar.make(view, R.string.TakenUsername, Snackbar.LENGTH_LONG)
+        if (CheckUsername(username.getText().toString())) {
+            Snackbar.make(view, R.string.TakenUsername, Snackbar.LENGTH_LONG)
                     .setAction(getString(R.string.action), null).show();
-        }
-        else{
+        } else {
             db.insert(
                     DrinksContract.DrinksEntry.TABLE_NAME,
                     DrinksContract.DrinksEntry._ID,
@@ -76,55 +70,52 @@ public class RegisterActivity extends AppCompatActivity {
 
             db.close();
             Snackbar.make(view, getString(R.string.data_saved), Snackbar.LENGTH_LONG)
-                    .setAction( getString(R.string.action), null).show();
+                    .setAction(getString(R.string.action), null).show();
             Intent intent = new Intent(getBaseContext(), AddDrinkActivity.class);
-            intent.putExtra(getString(R.string.EXTRA_MESSAGE),username.getText().toString());
-            intent.putExtra(getString(R.string.EXTRA_ID),"");
+            intent.putExtra(getString(R.string.EXTRA_MESSAGE), username.getText().toString());
+            intent.putExtra(getString(R.string.EXTRA_ID), "");
             startActivity(intent);
         }
     }
 
-    public Boolean CheckUsername(String username)
-    {
+    public Boolean CheckUsername(String username) {
         mDbHelper = new UserDbHelper(getBaseContext());
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        Cursor data=null;
-try {
+        Cursor data = null;
+        try {
 
-     data = db.
-            rawQuery("select * from tblUser where username=?",
-                    new String[]{username});
-    data.moveToFirst();
-    while (data.getCount() > 0) {
-        String id = data.getString(data.getColumnIndex("username"));
+            data = db.
+                    rawQuery("select * from tblUser where username=?",
+                            new String[]{username});
+            data.moveToFirst();
+            while (data.getCount() > 0) {
+                String id = data.getString(data.getColumnIndex("username"));
 
-        if (id.equals(username)) {
-            return true;
+                if (id.equals(username)) {
+                    return true;
+
+                } else {
+                    data.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            mDbHelper.onCreate(db);
 
         }
-       else{ data.moveToNext();}
-    }
-}
+        if (!data.equals(null)) {
+            data = db.
+                    rawQuery("select * from tblUser where username=?",
+                            new String[]{username});
+            data.moveToFirst();
+            while (data.getCount() > 0) {
+                String id = data.getString(data.getColumnIndex("username"));
+                if (id.equals(username)) {
+                    return true;
 
-catch(Exception e)
-{
-    mDbHelper.onCreate(db);
-
-}
-   if(!data.equals(null)){
-       data = db.
-               rawQuery("select * from tblUser where username=?",
-                       new String[]{username});
-       data.moveToFirst();
-        while (data.getCount() > 0) {
-            String id = data.getString(data.getColumnIndex("username"));
-            if (id.equals(username)) {
-                return true;
-
+                }
             }
         }
-    }
         return false;
     }
 

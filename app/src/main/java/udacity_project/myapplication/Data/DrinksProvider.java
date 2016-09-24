@@ -14,11 +14,11 @@ import java.util.HashMap;
 /**
  * Created by betim on 9/16/2016.
  */
-public class DrinksProvider extends ContentProvider{
+public class DrinksProvider extends ContentProvider {
 
     static final String PROVIDER_NAME = "udacity_project.myapplication.Data.dbDrinks";
     static final String URL = "content://" + PROVIDER_NAME + "/drinks";
-  public  static final Uri CONTENT_URI = Uri.parse(URL);
+    public static final Uri CONTENT_URI = Uri.parse(URL);
 
     // If you change the database schema, you must increment the database version.
     public static final int DATABASE_VERSION = 1;
@@ -52,11 +52,12 @@ public class DrinksProvider extends ContentProvider{
     public static final String SQL_DELETE_ENTRIES_DRINK =
             "DROP TABLE IF EXISTS " + DrinksContract.DrinksEntry.TABLE_NAME_DRINK;
 
-       @Override
+    @Override
     public boolean onCreate() {
         return false;
     }
-   UserDbHelper mDbHelper = new UserDbHelper(getContext());
+
+    UserDbHelper mDbHelper = new UserDbHelper(getContext());
     // Gets the data repository in write mode
 
     @Nullable

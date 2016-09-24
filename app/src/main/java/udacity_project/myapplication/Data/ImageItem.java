@@ -12,7 +12,7 @@ public class ImageItem {
     private String title;
     private Boolean isFavorite;
 
-    public ImageItem(Bitmap image, String title,Boolean isFavorite,String ids) {
+    public ImageItem(Bitmap image, String title, Boolean isFavorite, String ids) {
         super();
         this.image = image;
         this.title = title;
